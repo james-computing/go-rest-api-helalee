@@ -10,6 +10,7 @@ import (
 func main() {
 	fmt.Println("Hello")
 	var router *gin.Engine = gin.Default()
+	router.SetTrustedProxies(nil)
 
 	router.GET("/ping", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{
