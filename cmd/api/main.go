@@ -9,13 +9,13 @@ import (
 
 func main() {
 	fmt.Println("Hello")
-	r := gin.Default()
+	var router *gin.Engine = gin.Default()
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
+	router.GET("/ping", func(context *gin.Context) {
+		context.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
 
-	r.Run()
+	router.Run()
 }
