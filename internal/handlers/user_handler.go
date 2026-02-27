@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strings"
 	"todo_api/internal/models"
 	"todo_api/internal/repository"
 
@@ -49,7 +50,7 @@ func CreateUserHandler(pool *pgxpool.Pool) gin.HandlerFunc {
 
 		if err != nil {
 			// Not good to compare to a string...
-			if err.Error() != "" {
+			if strings.Contains(err.Error(), "duplicate") || strings.Contains(err.Error(), "unique") {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "User already exists"})
 				return
 			}
