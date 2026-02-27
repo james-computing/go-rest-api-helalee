@@ -103,18 +103,37 @@ func UpdateTodoHandler(pool *pgxpool.Pool) gin.HandlerFunc {
 			return
 		}
 
-		if input.Title == "" && input.Completed == nil {
+		if input.Title == nil && input.Completed == nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Must provide at least title or completed"})
 			return
 		}
 
-		var completed bool = false
+		// First check if the todo exists in the database
+		var existingTodo *models.Todo
+		existingTodo, err = repository.GetTodoById(pool, id)
+
+		if err != nil {
+			if err == pgx.ErrNoRows {
+				c.JSON(http.StatusFound, gin.H{"error": "Todo not found"})
+				return
+			}
+
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		var title string = existingTodo.Title
+		if input.Title != nil {
+			title = *input.Title
+		}
+
+		var completed bool = existingTodo.Completed
 		if input.Completed != nil {
 			completed = *input.Completed
 		}
 
 		var todo *models.Todo
-		todo, err = repository.UpdateTodo(pool, id, input.Title, completed)
+		todo, err = repository.UpdateTodo(pool, id, title, completed)
 		if err != nil {
 			if err == pgx.ErrNoRows {
 				c.JSON(http.StatusFound, gin.H{"error": "Todo not found"})
