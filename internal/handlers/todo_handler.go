@@ -18,8 +18,8 @@ type CreateTodoInput struct {
 
 type UpdateTodoInput struct {
 	//Id        int    `json: "id"`
-	Title     string `json:"title"`
-	Completed *bool  `json:"completed"` // *bool works as a nullable bool
+	Title     *string `json:"title"`
+	Completed *bool   `json:"completed"` // *bool works as a nullable bool
 }
 
 func CreateTodoHandler(pool *pgxpool.Pool) gin.HandlerFunc {
