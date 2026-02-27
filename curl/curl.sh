@@ -4,3 +4,5 @@ curl -X POST --json '{"title": "another title", "completed": false}' http://loca
 curl -X GET http://localhost:8080/todos
 
 curl -X GET http://localhost:8080/todos/1
+
+curl -X PUT --json '{"title: "updated title"}' http://localhost:8080/todos/1
