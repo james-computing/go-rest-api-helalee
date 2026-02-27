@@ -28,6 +28,7 @@ func CreateUserHandler(pool *pgxpool.Pool) gin.HandlerFunc {
 
 		if len(registerRequest.Password) < 6 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Password must have at least 6 characters"})
+			return
 		}
 
 		var bytes []byte = []byte(registerRequest.Password)
