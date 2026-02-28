@@ -10,6 +10,7 @@ import (
 type Config struct {
 	ConnectionString string
 	Port             string
+	JWTSecret        string
 }
 
 func Load() (*Config, error) {
@@ -22,6 +23,7 @@ func Load() (*Config, error) {
 	var config *Config = &Config{
 		ConnectionString: os.Getenv("CONNECTION_STRING"),
 		Port:             os.Getenv("PORT"),
+		JWTSecret:        os.Getenv("JWT_SECRET"),
 	}
 	return config, err
 }
