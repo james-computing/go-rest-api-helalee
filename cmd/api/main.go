@@ -33,20 +33,25 @@ func main() {
 	var router *gin.Engine = gin.Default()
 	router.SetTrustedProxies(nil)
 
+	// Public routes
 	router.GET("/ping", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
 
-	router.POST("/todos", handlers.CreateTodoHandler(pool))
-	router.GET("/todos", handlers.GetAllTodosHandler(pool))
-	router.GET("/todos/:id", handlers.GetTodoByIdHandler(pool))
-	router.PUT("/todos/:id", handlers.UpdateTodoHandler(pool))
-	router.DELETE("/todos/:id", handlers.DeleteTodoHandler(pool))
-
 	router.POST("/auth/register", handlers.CreateUserHandler(pool))
 	router.POST("/auth/login", handlers.LoginHandler(pool, cfg))
+
+	protected := router.Group("/todos")
+	protected.Use(middleware.AuthMiddleWare(cfg))
+
+	// Protected routes
+	protected.POST("", handlers.CreateTodoHandler(pool))
+	protected.GET("", handlers.GetAllTodosHandler(pool))
+	protected.GET("/:id", handlers.GetTodoByIdHandler(pool))
+	protected.PUT("/:id", handlers.UpdateTodoHandler(pool))
+	protected.DELETE("/:id", handlers.DeleteTodoHandler(pool))
 
 	// Middleware test route
 	router.GET("/protected-test", middleware.AuthMiddleWare(cfg), handlers.TestProtectedHandler())
