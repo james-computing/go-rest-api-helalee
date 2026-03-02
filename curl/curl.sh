@@ -12,3 +12,5 @@ curl -X DELETE http://localhost:8080/todos/2
 curl -X POST --json '{"email": "john@something.com", "password": "password123"}' http://localhost:8080/auth/register
 
 curl -X POST --json '{"email": "john@something.com", "password": "password123"}' http://localhost:8080/auth/login
+
+curl -X GET --json '{"email": "john@something.com", "password": "password123"}' -H "Authorization: Bearer replaceByAccessToken" http://localhost:8080/protected-test
